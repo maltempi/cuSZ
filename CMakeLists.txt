@@ -41,7 +41,7 @@ target_include_directories(cuszcompile_settings INTERFACE
 add_library(cuszargp  src/context.cc)
 target_link_libraries(cuszargp PUBLIC cuszcompile_settings)
 
-add_library(cuszpq  src/component/prediction.cc src/detail/prediction_impl.cu)
+add_library(cuszpq  src/component/prediction.cc src/kernel/kernel_cuda.cu src/detail/prediction_impl.cu)
 target_link_libraries(cuszpq PUBLIC cuszcompile_settings)
 
 add_library(cuszsp  src/component/spcodec.cc src/detail/spmat.cu src/detail/spvec.cu)
