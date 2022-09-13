@@ -21,7 +21,10 @@
 #include "../common.hh"
 #include "../utils/timer.hh"
 
-#define MIN(a, b) ((a) < (b)) ? (a) : (b)
+#ifndef MIN
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+#endif
+
 const static unsigned int WARP_SIZE = 32;
 
 #define tix threadIdx.x

@@ -100,6 +100,8 @@ class cuszCTX {
     size_t huffman_num_uints, huffman_num_bits;
     int    vle_sublen{512}, vle_pardeg{-1};
 
+    int device{0};
+
     unsigned int x{1}, y{1}, z{1}, w{1};
 
     struct {

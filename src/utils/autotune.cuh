@@ -19,11 +19,10 @@
 struct AutoconfigHelper {
     static int autotune(cuszCTX* ctx)
     {
-        auto tune_coarse_huffman_sublen = [](size_t len) {
-            int current_dev = 0;
-            cudaSetDevice(current_dev);
+        auto tune_coarse_huffman_sublen = [](size_t len, int device) {
+            cudaSetDevice(device);
             cudaDeviceProp dev_prop{};
-            cudaGetDeviceProperties(&dev_prop, current_dev);
+            cudaGetDeviceProperties(&dev_prop, device);
 
             auto nSM               = dev_prop.multiProcessorCount;
             auto allowed_block_dim = dev_prop.maxThreadsPerBlock;
@@ -35,14 +34,14 @@ struct AutoconfigHelper {
             return optimal_sublen;
         };
 
-        auto get_coarse_pardeg = [&](size_t len, int& sublen, int& pardeg) {
-            sublen = tune_coarse_huffman_sublen(len);
+        auto get_coarse_pardeg = [&](size_t len, int& sublen, int& pardeg, int device) {
+            sublen = tune_coarse_huffman_sublen(len, device);
             pardeg = ConfigHelper::get_npart(len, sublen);
         };
 
         // TODO should be move to somewhere else, e.g., cusz::par_optmizer
         if (ctx->use.autotune_vle_pardeg)
-            get_coarse_pardeg(ctx->data_len, ctx->vle_sublen, ctx->vle_pardeg);
+            get_coarse_pardeg(ctx->data_len, ctx->vle_sublen, ctx->vle_pardeg, ctx->device);
         else
             ctx->vle_pardeg = ConfigHelper::get_npart(ctx->data_len, ctx->vle_sublen);
 

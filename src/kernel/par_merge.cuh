@@ -58,10 +58,18 @@
 #include <cooperative_groups.h>
 namespace cg = cooperative_groups;
 
+#ifndef MAX
 #define MAX(X, Y) (((X) > (Y)) ? (X) : (Y))
+#endif
+
+#ifndef MIN
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+#endif
+
+#ifndef MOD
 // Mathematically correct modulo
 #define MOD(a, b) ((((a) % (b)) + (b)) % (b))
+#endif
 
 /* MERGETYPE
  * Performs <runs> merges of two sorted pseudorandom <vec_t> arrays of length <size>
