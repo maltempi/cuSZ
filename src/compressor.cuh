@@ -96,7 +96,7 @@ class Compressor : public BaseCompressor<typename BINDING::PREDICTOR> {
     {
         if (spcodec) delete spcodec;
         if (codec) delete codec;
-        if (fb_codec) delete codec;
+        if (fb_codec) delete fb_codec;
         if (predictor) delete predictor;
     }
 
