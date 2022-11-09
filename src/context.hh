@@ -24,6 +24,9 @@
 #include "utils/format.hh"
 #include "utils/strhelper.hh"
 
+#include <thrust/device_ptr.h>
+#include <thrust/extrema.h>
+
 using std::string;
 
 namespace cusz {
@@ -235,6 +238,26 @@ class cuszCTX {
         if (ctx->ndim >= 3) ctx->z = StrHelper::str2int(dims[2]);
         if (ctx->ndim >= 4) ctx->w = StrHelper::str2int(dims[3]);
         ctx->data_len = ctx->x * ctx->y * ctx->z * ctx->w;
+    }
+
+    template <typename T>
+    static void adjust_eb(cuszCTX* ctx, T* dptr)
+    {
+        if (ctx->mode == "r2r") {
+            thrust::device_ptr<T> g_ptr;
+
+            g_ptr = thrust::device_pointer_cast(dptr);
+
+            // excluding padded
+            auto max_el_loc = thrust::max_element(g_ptr, g_ptr + ctx->data_len);
+            auto min_el_loc = thrust::min_element(g_ptr, g_ptr + ctx->data_len);
+
+            double max_value = *max_el_loc;
+            double min_value = *min_el_loc;
+            double rng       = max_value - min_value;
+
+            ctx->eb *= rng;
+        }
     }
 
    public:
